@@ -7,4 +7,5 @@ df = pd.read_csv('./dataset.csv')
 
 model = bn.structure_learning.fit(df)
 
+print(model['adjmat'])
 plot = bn.plot(model)
