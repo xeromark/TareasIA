@@ -15,30 +15,23 @@ Matriz = np.array([
     [0.13, 0.11, 0.13, 0.03, 0.20, 0.20, 0.04, 0.15, 0.01]   # G9
 ])
 
-
-estados = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+### Declaracion de variables
 estadoActual = [0, 0, 0, 0, 1, 0, 0, 0, 0]
 temporal = [] #lista vacia para guardar los datos.
+fs = [0,2,4,6,8] # Filas Seleccionadas para mostrar, en este caso G1, G3. G5, G7, G9
 
+### Lógica del random-walk
 for x in range(10):
    estadoActual = np.dot(estadoActual , Matriz) # Acumulacion del estado actual con los siguientes
    temporal.append(estadoActual) # Cada iteracion se alamcena su resultado acumulado
 
+temporal = np.array(temporal) # Lo pasamos a una lista de array de tipo enteros no tuplas
 
-temporal=np.array(temporal)
+# Se grafican los resultados obtenidos
+for i in fs:
+  plt.plot(temporal[: , i], label=f'Canción G{i+1}')
 
-aux = []
-
-for i in [1,3,5,7,9]:
-  indice_temporal = estados.index(i)
-
-  plt.plot(temporal[: , indice_temporal], label=f'Canción G{i}')
-
-
-print(tabulate(temporal[:, [0,2,4,6,8]], headers=["G1","G3","G5","G7","G9"], tablefmt="grid")) # Mostrar la tabla tabulada asociada al grafico 
-
-
-
+print(tabulate(temporal[:, fs], headers=["G1","G3","G5","G7","G9"], tablefmt="grid")) # Mostrar la tabla tabulada asociada al grafico 
 
 plt.xlabel('Iteración')
 plt.ylabel('Probabilidad (%)')
