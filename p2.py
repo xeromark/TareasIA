@@ -27,7 +27,7 @@ for x in range(10):
 
 temporal = np.array(temporal) # Lo pasamos a una lista de array de tipo enteros no tuplas
 
-# Se grafican los resultados obtenidos
+# Se muestran y grafican los resultados obtenidos
 for i in fs:
   plt.plot(temporal[: , i], label=f'Canción G{i+1}')
 
