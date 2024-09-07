@@ -18,6 +18,3 @@ bn.plot(model1, pos=G['pos'])
 # Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False
 print(tabulate(model1['independence_test'], headers="keys"))
 
-# Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
-model3 = bn.independence_test(model, df, alpha=0.05, prune=True)
-bn.plot(model3, pos=G['pos'])
