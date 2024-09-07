@@ -1,6 +1,14 @@
 import numpy as np
 from tabulate import tabulate
 
+# Este metodo por python para calcular la distribucion estacionaria de la matriz, 
+# se basa en el siguiente proceso: 
+#  πP = π
+#  πP - π = 0
+#  π(P - I) = 0  // Donde I es la matriz identidad, se distribuyó a partir de las propiedades de las matrices
+#
+# Luego a partir de esto se encontraron los resultados
+
 Matriz = np.array([
    #  G1    G2    G3    G4    G5    G6    G7    G8    G9
     [0.25, 0.06, 0.08, 0.15, 0.04, 0.02, 0.15, 0.15, 0.10],  # G1
@@ -26,8 +34,11 @@ b = np.zeros(Matriz.shape[0])
 b = np.append(b, 1)
 
 # Resolver el sistema de ecuaciones
-pi = np.linalg.lstsq(A, b, rcond=None)[0]
+Gn = np.linalg.lstsq(A, b, rcond=None)[0]
 
-# Imprimir la solución
-print("La distribución estacionaria es:", pi)
+print("La distribución estacionaria es:" )
+
+for i in range(9):
+    print(f"G{i+1}" , "=", Gn[i])
+
 
