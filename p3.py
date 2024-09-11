@@ -18,7 +18,7 @@ observaciones = [0, 1, 1, 0, 1, 1, 1, 1, 0]
 
 # Probabilidades iniciales uniformes π 
 #               R    S    C
-pi = np.array([1/3, 1/3, 1/3])
+π = np.array([1/3, 1/3, 1/3])
 
 # Número de estados y observaciones
 n_estados = Matriz_T.shape[0]
@@ -36,7 +36,7 @@ backpointer = np.zeros((n_estados, n_obs), dtype=int)
 #                   3
 for s in range(n_estados):
 #   μ0(q0) =        P(q0) * P(o1/q0)
-    viterbi[s, 0] = pi[s] * Matriz_E[s, observaciones[0]]
+    viterbi[s, 0] = π[s] * Matriz_E[s, observaciones[0]]
     backpointer[s, 0] = 0
 
 # Ejemplo para la inicialización
@@ -48,11 +48,11 @@ for s in range(n_estados):
 for t in range(1, n_obs):
 #                      9
     for s in range(n_estados):
-#                           μk−1(qk−1)    * 
+#                           μk−1(qk−1)    * P(qk /qk−1)
         prob_transition = viterbi[:, t-1] * Matriz_T[:, s]
-        print(viterbi[:, t-1] ,"*", Matriz_T[:, s])
-        print(prob_transition)
-#          μk−1(qk−1) =                      P(ok/qk) * μk−1(qk−1) 
+#        print(viterbi[:, t-1] ,"*", Matriz_T[:, s])
+#        print(prob_transition)
+#          μk(qk) =                      P(ok/qk) * Max[ μk−1(qk−1) * P(qk /qk−1) ]
         viterbi[s, t] = Matriz_E[s, observaciones[t]] * np.max(prob_transition)
         backpointer[s, t] = np.argmax(prob_transition)
 
