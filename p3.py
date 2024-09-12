@@ -1,76 +1,64 @@
 import numpy as np
+from tabulate import tabulate
+
+def viterbi(O, A, B, π):
+   
+    # O: Secuencia de observaciones (lista de índices de observaciones).
+    # A: Matriz de probabilidad de transición.
+    # B: Matriz de probabilidad de emisión.
+    # π: Vector de probabilidad iniciales que para este caso todas son iguales.
+
+    n_estados = A.shape[0]  # Numero de estados
+    n_obs = len(O)          # Numero de observaciones
+
+    # 1. Inicialización
+    #               9   x    3
+    V = np.zeros((n_obs, n_estados))
+
+    for s in range(n_estados):
+        V[0, s] = π[s] * B[s, O[0]]
+
+    # 2. Recursión
+    for t in range(1, n_obs):
+        for s in range(n_estados):
+            prob = V[t-1] * A[:, s] * B[s, O[t]]
+            V[t, s] = np.max(prob)
+    
+    return V
 
 # Definir matrices de transición y emisión
+# R: Ramen
+# S: Salmorejo
+# C: Cebolla
+
 Matriz_T = np.array([
-    [0.2, 0.6, 0.2],
-    [0.3, 0.0, 0.7],
-    [0.5, 0.0, 0.5]
+    # R    S    C
+    [0.2, 0.6, 0.2], # R
+    [0.3, 0.0, 0.7], # S
+    [0.5, 0.0, 0.5]  # C
 ])
 
 Matriz_E = np.array([
-    [0.8, 0.2],  # Estado 1: P(Satisfecho | q1) = 0.8, P(Insatisfecho | q1) = 0.2
-    [0.3, 0.7],  # Estado 2: P(Satisfecho | q2) = 0.3, P(Insatisfecho | q2) = 0.7
-    [0.6, 0.4]   # Estado 3: P(Satisfecho | q3) = 0.6, P(Insatisfecho | q3) = 0.4
+    # S    I
+    [0.8, 0.2],
+    [0.3, 0.7],
+    [0.6, 0.4] 
 ])
 
-# Secuencia de observaciones (0 = Satisfecho, 1 = Insatisfecho)
+# Probabilidades iniciales
+π = np.array([1/3, 1/3, 1/3])  # Suponiendo una distribución inicial uniforme
+
+# Secuencia de observaciones (1 = satisfecho, 0 = insatisfecho)
+#observaciones = [1, 0, 0, 1, 0, 0, 0, 0, 1]
 observaciones = [0, 1, 1, 0, 1, 1, 1, 1, 0]
 
-# Probabilidades iniciales uniformes π 
-#               R    S    C
-π = np.array([1/3, 1/3, 1/3])
+# Ejecutar el algoritmo de Viterbi
+V = viterbi(observaciones, Matriz_T, Matriz_E, π)
 
-# Número de estados y observaciones
-n_estados = Matriz_T.shape[0]
-n_obs = len(observaciones)
+# Obtener la probabilidad en la quinta iteración (índice 4)
+q5 = np.max(V[4])
 
-# Matriz para almacenar las probabilidades (Viterbi)
-#                       3   x   9
-viterbi = np.zeros((n_estados, n_obs))
-
-
-# Matriz para almacenar los pasos (para backtracking)
-backpointer = np.zeros((n_estados, n_obs), dtype=int)
-
-# Inicialización
-#                   3
-for s in range(n_estados):
-#   μ0(q0) =        P(q0) * P(o1/q0)
-    viterbi[s, 0] = π[s] * Matriz_E[s, observaciones[0]]
-    backpointer[s, 0] = 0
-
-# Ejemplo para la inicialización
-# s = 0 => viterbi[0, 0] = pi[0] * Matriz_E[0, observaciones[0]] =>  viterbi[0, 0] = 1/3 * 0.8 = 0,26
-# s = 1 => viterbi[1, 0] = pi[1] * Matriz_E[1, observaciones[0]] =>  viterbi[1, 0] = 1/3 * 0.3 = 0,1
-# s = 2 => viterbi[2, 0] = pi[2] * Matriz_E[2, observaciones[0]] =>  viterbi[2, 0] = 1/3 * 0.6 = 0,2
-
-# Recursión         3
-for t in range(1, n_obs):
-#                      9
-    for s in range(n_estados):
-#                           μk−1(qk−1)    * P(qk /qk−1)
-        prob_transition = viterbi[:, t-1] * Matriz_T[:, s]
-#        print(viterbi[:, t-1] ,"*", Matriz_T[:, s])
-#        print(prob_transition)
-#          μk(qk) =                      P(ok/qk) * Max[ μk−1(qk−1) * P(qk /qk−1) ]
-        viterbi[s, t] = Matriz_E[s, observaciones[t]] * np.max(prob_transition)
-        backpointer[s, t] = np.argmax(prob_transition)
-
-
-# Backtracking para encontrar la secuencia de estados más probable
-best_path = np.zeros(n_obs, dtype=int)
-best_path[-1] = np.argmax(viterbi[:, -1])  # Último estado más probable
-
-for t in range(n_obs-2, -1, -1):
-    best_path[t] = backpointer[best_path[t+1], t+1]
-
-# Probabilidad del estado más probable en el tiempo t=5 (q5)
-q5_prob = viterbi[:, 4]
-best_q5_state = np.argmax(q5_prob) + 1  # El estado más probable en t=5 (q5)
-
-"""
-# Imprimir resultados
-print("La probabilidad en t=5 para cada estado:", q5_prob)
-print("El estado más probable en t=5 es q:", best_q5_state)
-print("La secuencia más probable de estados:", best_path + 1)
-"""
+    #best_path_prob = np.max(V[-1])
+    #best_last_state = np.argmax(V[-1])
+print(tabulate(V))
+print("Probabilidad del estado oculto q5 más probable es", np.argmax(V[4]) , "con una probabilidad de", q5)
