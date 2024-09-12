@@ -1,14 +1,14 @@
 import numpy as np
 from tabulate import tabulate
 
-def viterbi(O, A, B, π):
+def viterbi(O, T, E, π):
    
     # O: Secuencia de observaciones (lista de índices de observaciones).
     # A: Matriz de probabilidad de transición.
     # B: Matriz de probabilidad de emisión.
     # π: Vector de probabilidad iniciales que para este caso todas son iguales.
 
-    n_estados = A.shape[0]  # Numero de estados
+    n_estados = T.shape[0]  # Numero de estados
     n_obs = len(O)          # Numero de observaciones
 
     # 1. Inicialización
@@ -16,12 +16,12 @@ def viterbi(O, A, B, π):
     V = np.zeros((n_obs, n_estados))
 
     for s in range(n_estados):
-        V[0, s] = π[s] * B[s, O[0]]
+        V[0, s] = π[s] * E[s, O[0]]
 
     # 2. Recursión
     for t in range(1, n_obs):
         for s in range(n_estados):
-            prob = V[t-1] * A[:, s] * B[s, O[t]]
+            prob = V[t-1] * T[:, s] * E[s, O[t]]
             V[t, s] = np.max(prob)
     
     return V
