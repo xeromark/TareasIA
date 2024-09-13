@@ -14,8 +14,16 @@ model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
 model = bn.independence_test(model, df, alpha=0.05, prune=True)
 
 # Examine the output of the chi-square test. All P values are significant. Nothing is removed.
-print(tabulate(model['independence_test'], tablefmt="grid", headers="keys"))
+#print(tabulate(model['independence_test'], tablefmt="grid", headers="keys"))
 
 
 # Grafico
-bn.plot(model)
+#bn.plot(model)
+
+#Inferencias
+
+parametro = bn.parameter_learning.fit(model, df)
+inferencia = bn.inference.fit(parametro, variables=['Hierba_mojada'], evidence={'Lluvia': 1, 'Aspersor':1})
+
+# Mostrar el resultado de la inferencia
+print(inferencia)

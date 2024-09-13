@@ -3,7 +3,7 @@ from tabulate import tabulate
 
 def viterbi(O, T, E, π):
    
-    # O: Secuencia de observaciones (lista de índices de observaciones).
+    # O: Secuencia de observaciones.
     # A: Matriz de probabilidad de transición.
     # B: Matriz de probabilidad de emisión.
     # π: Vector de probabilidad iniciales que para este caso todas son iguales.
@@ -26,7 +26,7 @@ def viterbi(O, T, E, π):
     
     return V
 
-# Definir matrices de transición y emisión
+# Datos de matrices de transición y emisión
 # R: Ramen
 # S: Salmorejo
 # C: Cebolla
@@ -46,19 +46,16 @@ Matriz_E = np.array([
 ])
 
 # Probabilidades iniciales
-π = np.array([1/3, 1/3, 1/3])  # Suponiendo una distribución inicial uniforme
+S = ['Ramen', 'Salmorejo', 'Cebolla']
+π = np.array([1/3, 1/3, 1/3])  # Suponiendo una % igual para cada estado
 
 # Secuencia de observaciones (1 = satisfecho, 0 = insatisfecho)
-#observaciones = [1, 0, 0, 1, 0, 0, 0, 0, 1]
 observaciones = [0, 1, 1, 0, 1, 1, 1, 1, 0]
 
-# Ejecutar el algoritmo de Viterbi
+# se usa algoritmo Viterbi
 V = viterbi(observaciones, Matriz_T, Matriz_E, π)
 
-# Obtener la probabilidad en la quinta iteración (índice 4)
+# Obtener la probabilidad en q5
 q5 = np.max(V[4])
 
-    #best_path_prob = np.max(V[-1])
-    #best_last_state = np.argmax(V[-1])
-print(tabulate(V))
-print("Probabilidad del estado oculto q5 más probable es", np.argmax(V[4]) , "con una probabilidad de", q5)
+print("Probabilidad del estado oculto q5 más probable es", S[np.argmax(V[4])] , "con una probabilidad de", q5)
