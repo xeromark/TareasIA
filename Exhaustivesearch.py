@@ -18,12 +18,19 @@ model = bn.independence_test(model, df, alpha=0.05, prune=True)
 
 
 # Grafico
-#bn.plot(model)
+bn.plot(model)
 
 #Inferencias
 
 parametro = bn.parameter_learning.fit(model, df)
-inferencia = bn.inference.fit(parametro, variables=['Hierba_mojada'], evidence={'Lluvia': 1, 'Aspersor':1})
+inferencia = bn.inference.fit(parametro, variables=['Hierba_mojada'], evidence={'Lluvia': 1})
 
 # Mostrar el resultado de la inferencia
 print(inferencia)
+
+
+parametro2 = bn.parameter_learning.fit(model, df)
+inferencia2 = bn.inference.fit(parametro2, variables=['Aspersor'], evidence={'Nublado': 1})
+
+# Mostrar el resultado de la inferencia
+print(inferencia2)

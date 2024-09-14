@@ -11,9 +11,9 @@ def generar_csv_con_dependencias(nombre_archivo, num_filas):
         
         # Generador
         for i in range(num_filas):
-            Nublado = random.randint(0, 1)
-            Aspersor = 0 if Nublado == 1 else random.randint(0, 1) * random.randint(0, 1) * random.randint(0, 1)
-            Lluvia = random.randint(0, 1) if Nublado == 1 else 0
+            Nublado = random.randint(0, 1)  * random.randint(0, 1) 
+            Aspersor = random.randint(0, 1)  * random.randint(0, 1)  if Nublado == 1 else random.randint(0, 1) 
+            Lluvia = random.randint(0, 1) * random.randint(0, 1)  if Nublado == 1 else 0
             Hierva_mojada = 1 if (Aspersor == 1 or Lluvia == 1) else 0
 
             fila = [Nublado, Aspersor, Lluvia, Hierva_mojada]

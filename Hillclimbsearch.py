@@ -7,14 +7,28 @@ from tabulate import tabulate
 df = pd.read_csv('dataset.csv')
 
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+modelhc = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot detected DAG
-G = bn.plot(model)
 
 # Compute edge strength using chi-square independence test
-model1 = bn.independence_test(model, df, alpha=0.05, prune=False)
-bn.plot(model1, pos=G['pos'])
+modelhc = bn.independence_test(modelhc, df, alpha=0.05, prune=False)
+bn.plot(modelhc)
 
 # Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False
-print(tabulate(model1['independence_test'], headers="keys"))
+print(tabulate(modelhc['independence_test'], headers="keys"))
 
+
+
+
+parametrohc = bn.parameter_learning.fit(modelhc, df)
+inferenciahc = bn.inference.fit(parametrohc, variables=['Hierba_mojada'], evidence={'Lluvia': 1})
+
+# Mostrar el resultado de la inferencia
+print(inferenciahc)
+
+
+parametrohc2 = bn.parameter_learning.fit(modelhc, df)
+inferenciahc2 = bn.inference.fit(parametrohc2, variables=['Aspersor'], evidence={'Nublado': 1})
+
+# Mostrar el resultado de la inferencia
+print(inferenciahc2)
