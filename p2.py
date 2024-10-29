@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score, recall_score, confusion_matrix
 from sklearn import metrics
 
 # Cargar el dataset
-df = pd.read_csv('dataset.csv') # https://www.kaggle.com/datasets/kandij/diabetes-dataset
+df = pd.read_csv('dataset.csv') # https://www.kaggle.com/datasets/alexteboul/heart-disease-health-indicators-dataset
 
 # Dividir el dataset
 X = df[["BMI"]]  # Solo usamos la característica BMI
@@ -15,8 +15,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_
 
 # Entrenar el modelo KNN
 k_values = [1, 5, 7, 11, 21]
-results = {}
-
 accuracies = []
 recalls = []
 cms = []
