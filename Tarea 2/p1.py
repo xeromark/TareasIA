@@ -28,7 +28,6 @@ print("Luego se tiene el siguiente gráfico:")
 # Graficar los datos
 plt.scatter(x, y, color='blue', label='Datos', alpha=0.5)
 
-# Graficar la frontera de decisión
 # Crear un rango de valores de BMI
 BMI_range = np.linspace(df['BMI'].min()-1, df['BMI'].max()+1, 300).reshape(-1, 1)
 

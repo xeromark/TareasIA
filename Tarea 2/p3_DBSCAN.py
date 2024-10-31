@@ -1,4 +1,3 @@
-# Importar las bibliotecas necesarias
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,9 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import silhouette_score
 
 # Cargar el dataset
-data = pd.read_csv('dataset.csv')  # Reemplaza con la ruta a tu archivo CSV
-
-
+data = pd.read_csv('dataset.csv') 
 
 # Seleccionar las características
 X = data[['BMI', 'HighBP']]
@@ -28,15 +25,16 @@ params = [
 
 results = []
 
-# Entrenar el modelo DBSCAN con diferentes configuraciones
+# Entrena el modelo DBSCAN con las diferentes configuraciones
 for eps, min_samples in params:
     dbscan = DBSCAN(eps=eps, min_samples=min_samples)
     clusters = dbscan.fit_predict(X_scaled)
-    results.append((eps, min_samples, clusters))
+    silhouette = silhouette_score(X_scaled, clusters) if len(set(clusters)) > 1 else -1
+    results.append((eps, min_samples, clusters, silhouette))
 
-# Visualizar los resultados
+# Para graficar los resultados
 plt.figure(figsize=(12, 8))
-for i, (eps, min_samples, clusters) in enumerate(results):
+for i, (eps, min_samples, clusters, _) in enumerate(results):
     plt.subplot(2, 2, i+1)
     plt.scatter(X['BMI'], X['HighBP'], c=clusters, cmap='viridis', marker='o', edgecolor='k')
     plt.title(f'DBSCAN: eps={eps}, min_samples={min_samples}')
@@ -46,8 +44,8 @@ for i, (eps, min_samples, clusters) in enumerate(results):
 plt.tight_layout()
 plt.show()
 
-# Analizar los resultados
-for eps, min_samples, clusters in results:
+# Mostrar numero de clusters
+for eps, min_samples, clusters, silhouette in results:
     n_clusters = len(set(clusters)) - (1 if -1 in clusters else 0)
     print(f'Configuración: eps={eps}, min_samples={min_samples}, '
-          f'Número de clusters: {n_clusters}')
+          f'Número de clusters: {n_clusters}, Silhouette Score: {silhouette:.3f}')
