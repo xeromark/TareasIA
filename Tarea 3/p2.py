@@ -20,7 +20,7 @@ color_plots = {'dataset': 'b',
                'kan': 'orange',
                'mlp': 'green'}
 
-n_iter_train_1d = 5
+n_iter_train_1d = 5000
 loss_tol_1d = .05
 seed = 476
  
